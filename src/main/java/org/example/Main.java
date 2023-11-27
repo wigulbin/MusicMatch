@@ -1,6 +1,8 @@
 package org.example;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.*;
 import jakarta.ws.rs.core.Form;
 import jakarta.ws.rs.core.MediaType;
@@ -49,7 +51,11 @@ public class Main {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.body());
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> myMap = objectMapper.readValue(response.body(), new TypeReference<HashMap<String,String>>() {});
+        System.out.println(myMap.getOrDefault("access_token", ""));
     }
 
     public static void callSpotifyJAXRS() throws IOException, InterruptedException {
@@ -68,7 +74,9 @@ public class Main {
                 accessTokenJson = response.readEntity(String.class);
             }
 
-            System.out.println(accessTokenJson);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, String> myMap = objectMapper.readValue(accessTokenJson, new TypeReference<HashMap<String,String>>() {});
+            System.out.println(myMap.getOrDefault("access_token", ""));
         }
     }
 }
