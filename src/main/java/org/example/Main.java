@@ -28,12 +28,12 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        callSpotifyNoLibrary();
-        callSpotifyJAXRS();
+        System.out.println(callSpotifyNoLibrary());;
+        System.out.println(callSpotifyJAXRS());;
 
     }
 
-    public static void callSpotifyNoLibrary() throws IOException, InterruptedException {
+    public static String callSpotifyNoLibrary() throws IOException, InterruptedException {
         String auth = Base64.getEncoder().encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
 
         Map<String, String> parameters = new HashMap<>();
@@ -55,10 +55,10 @@ public class Main {
 
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, String> myMap = objectMapper.readValue(response.body(), new TypeReference<HashMap<String,String>>() {});
-        System.out.println(myMap.getOrDefault("access_token", ""));
+        return myMap.getOrDefault("access_token", "");
     }
 
-    public static void callSpotifyJAXRS() throws IOException, InterruptedException {
+    public static String callSpotifyJAXRS() throws IOException, InterruptedException {
         String auth = Base64.getEncoder().encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
         try(Client client = ClientBuilder.newClient();)
         {
@@ -76,7 +76,7 @@ public class Main {
 
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, String> myMap = objectMapper.readValue(accessTokenJson, new TypeReference<HashMap<String,String>>() {});
-            System.out.println(myMap.getOrDefault("access_token", ""));
+            return myMap.getOrDefault("access_token", "");
         }
     }
 }
