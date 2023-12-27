@@ -49,7 +49,7 @@ public class Main {
     public static String getResourcePath(String resourceName) {
         URL resource = Main.class.getClassLoader().getResource(resourceName);
         if(resource != null) {
-            String path =resource.getPath();
+            String path = resource.getPath();
             if(path.startsWith("/"))
                 path = path.substring(1);
             return path;
