@@ -27,16 +27,18 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static final URI TOKEN_URI = URI.create("https://accounts.spotify.com/api/token");
-    public static final String CLIENT_ID = "";
-    public static final String CLIENT_SECRET = "";
+    public static String CLIENT_ID = "";
+    public static String CLIENT_SECRET = "";
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println(callSpotifyNoLibrary());;
-        System.out.println(callSpotifyJAXRS());;
-
         String path = getResourcePath("keys.json");
         Map<String, Object> keyMap = parseJsonStringForMap(Files.readString(Path.of(path)));
+        CLIENT_ID = (String) keyMap.get("clientid");
+        CLIENT_SECRET = (String) keyMap.get("clientSecret");
+
+        System.out.println(callSpotifyNoLibrary());
+        System.out.println(callSpotifyJAXRS());
     }
     public static Map<String, Object> parseJsonStringForMap(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
