@@ -1,6 +1,7 @@
 package org.example;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.client.*;
@@ -10,11 +11,14 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +35,25 @@ public class Main {
         System.out.println(callSpotifyNoLibrary());;
         System.out.println(callSpotifyJAXRS());;
 
+        String path = getResourcePath("keys.json");
+        Map<String, Object> keyMap = parseJsonStringForMap(Files.readString(Path.of(path)));
+    }
+    public static Map<String, Object> parseJsonStringForMap(String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> myMap = objectMapper.readValue(json, new TypeReference<HashMap<String,Object>>() {});
+        System.out.println(myMap);
+        return myMap;
+    }
+    public static String getResourcePath(String resourceName) {
+        URL resource = Main.class.getClassLoader().getResource(resourceName);
+        if(resource != null) {
+            String path =resource.getPath();
+            if(path.startsWith("/"))
+                path = path.substring(1);
+            return path;
+        }
+
+        return "";
     }
 
     public static String callSpotifyNoLibrary() throws IOException, InterruptedException {
