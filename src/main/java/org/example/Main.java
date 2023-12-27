@@ -32,14 +32,14 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        String path = getResourcePath("keys.json");
-        Map<String, Object> keyMap = parseJsonStringForMap(Files.readString(Path.of(path)));
-        CLIENT_ID = (String) keyMap.get("clientid");
-        CLIENT_SECRET = (String) keyMap.get("clientSecret");
-
-        System.out.println(callSpotifyNoLibrary());
-        System.out.println(callSpotifyJAXRS());
+        try{
+            SpotifyClient client = new SpotifyClient();
+            Track track = client.findTrack("11dFghVXANMlKmJXsNCbNl");
+            System.out.println(track);
+        } catch (Exception e){}
     }
+
+
     public static Map<String, Object> parseJsonStringForMap(String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> myMap = objectMapper.readValue(json, new TypeReference<HashMap<String,Object>>() {});
@@ -57,6 +57,12 @@ public class Main {
 
         return "";
     }
+
+
+
+
+
+
 
     public static String callSpotifyNoLibrary() throws IOException, InterruptedException {
         String auth = Base64.getEncoder().encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes());
